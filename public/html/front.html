@@ -1,0 +1,107 @@
+<html>
+	<head>
+		<title>Scoring System</title>
+	</head>
+
+	<!-- script -->
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+
+	var socket = io();
+
+	var i;
+
+	function resetCounter ()
+	{
+		i = 60;
+	}
+
+	function startCounter ()
+	{
+		$('.questionTimer').html(i);
+		i--;
+
+		if(i < 0)
+		{
+			alert("timer's done");
+		}else
+		{
+			setTimeout(startCounter, 1000);
+		}
+	}
+
+
+	$(document).ready(function(){
+	
+		//Splash Screen
+		socket.on('splashScreen', function(){
+			$('.screen').addClass('hidden');
+			$('.splashScreen').removeClass('hidden');
+		});
+
+		// Score
+		socket.on('scoreScreen', function(){
+			$('.screen').addClass('hidden');
+			$('.scoreOverview').removeClass('hidden');
+		});
+
+		// Question
+		socket.on('displayQuestion', function(question){
+			$('.screen').addClass('hidden');
+			$('.questionView').removeClass('hidden');
+			$('.questionField').html(question);
+			resetCounter();
+			startCounter();
+		})
+
+
+	});
+
+	</script>
+
+	<style>
+		.hidden
+		{
+			display:none;
+		}
+
+		.show
+		{
+			display:block;
+		}
+
+		#screen
+		{
+			background: #ccc;
+		}
+
+		#apel
+		{
+			background:#000;
+		}
+	</style>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<!-- splash screen -->
+				<div class="splashScreen screen">
+					<h1>This is a splash screen</h1>
+				</div>
+
+				<!-- score overview -->
+				<div class="scoreOverview screen hidden">
+					<h1>Score overview</h1>
+				</div>
+
+				<!-- display question -->
+				<div class="questionView screen hidden">
+					<h1>Question View</h1>
+					<div class="questionField">&nbsp</div>
+					<div class="questionTimer"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

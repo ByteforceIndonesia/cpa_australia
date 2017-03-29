@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>Controller Score System</title>
+	</head>
+
+	<!-- script -->
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+	<script src="../js/bootstrap.min.js"></script>
+
+	<script>
+	var socket = io();
+
+	$(document).ready(function(){
+
+		// Splash Screen
+		$('#splashScreen').click(function()
+		{
+			socket.emit('splashScreen');
+		});
+
+		// Score Screen
+		$('#scoreOverview').click(function()
+		{
+			socket.emit('scoreScreen');
+		});
+
+		// Display Question
+		$('#displayQuestion').click(function()
+		{
+			socket.emit('displayQuestion');
+		});
+
+	});
+	</script>
+
+	<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1>Score System Controller</h1>
+				<button id="splashScreen" class="btn btn-primary">Splash Screen</button>
+			</div>
+		</div>
+		<hr width="100%">
+		<div class="row">
+			<div class="col-lg-3">
+				<h3>Score Overview</h3>
+				<button id="scoreOverview" class="btn btn-primary">
+					Score Overview
+				</button>
+					<br><br>
+				<form id="addScore">
+					<label for="team">Select Team</label>
+					<select name="team" id="">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+
+					<label for="Points"></label>
+					<input type="text" name="points">
+
+					<button class="btn btn-primary">Set Score</button>
+				</form>
+			</div>
+			<div class="col-lg-3">
+				<h3>Question Control</h3>
+				<br>
+				<button id="displayQuestion" class="btn btn-primary">Display Question</button>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<title>Add Question</title>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+		<script src="../js/bootstrap.min.js"></script>
+	</head>
+
+	<body>
+		<form method="post" action="http://localhost:3000/process_post" enctype="multipart/form-data" class="form">
+
+			<div class="input-group">
+				<label for="question">Question</label>
+				<textarea name="question" id="question" class="form-control"></textarea>
+			</div>
+			
+			<br><br>
+
+			<label for="answers">Answer</label>
+			<div id="answerField">
+				<input type="text" name="answers[]" id="answers">
+			</div>
+			<button id="newAnswer" type="button">Add New Answer</button>
+
+			<br>
+
+			<label for="image"></label>
+			<input type="file" name="question_image" id="image">
+
+			<button>Submit</button>
+		</form>
+
+
+		<script>
+			$(document).ready(function()
+			{
+				$('#newAnswer').click(function()
+				{
+					$('#answerField').append('<br><br><input type="text" name="answers[]" id="answers">');
+				});
+			});
+		</script>
+	</body>
+</html>
