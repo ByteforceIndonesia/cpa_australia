@@ -15,19 +15,41 @@
 	function resetCounter ()
 	{
 		i = 60;
+		$('.timerDone').addClass('hidden');
+		$('questionTimer').removeClass('hidden');
 	}
 
 	function startCounter ()
 	{
+		$('questionTimer').removeClass('hidden');
 		$('.questionTimer').html(i);
 		i--;
 
 		if(i < 0)
 		{
-			alert("timer's done");
+			$('.timerDone').removeClass('hidden');
+			$('.questionTimer').addClass('hidden');
 		}else
 		{
 			setTimeout(startCounter, 1000);
+		}
+	}
+
+	function populateScore(scores)
+	{
+		// Clean the Classes
+		$('.groupWrapper').html('');
+
+		//Create the Classes
+		for(var i=0; i< scores.length; i++)
+		{
+			$('.groupWrapper').append('<div class="groupScore"></div>');
+		}
+
+		// Fill the classes
+		for(var i = 0; i<scores.length; i++)
+		{
+			$('.groupScore:nth-child(' + (i+1) + ')').html(scores[i]);
 		}
 	}
 
@@ -41,7 +63,8 @@
 		});
 
 		// Score
-		socket.on('scoreScreen', function(){
+		socket.on('scoreScreen', function(scores){
+			populateScore(scores);
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
 		});
@@ -93,6 +116,8 @@
 				<!-- score overview -->
 				<div class="scoreOverview screen hidden">
 					<h1>Score overview</h1>
+
+					<div class="groupWrapper"></div>
 				</div>
 
 				<!-- display question -->
@@ -100,6 +125,7 @@
 					<h1>Question View</h1>
 					<div class="questionField">&nbsp</div>
 					<div class="questionTimer"></div>
+					<div class="timerDone hidden">Time is Up!</div>
 				</div>
 			</div>
 		</div>

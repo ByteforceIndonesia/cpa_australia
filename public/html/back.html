@@ -14,8 +14,20 @@
 
 	<script>
 	var socket = io();
+	var count = 0;
 
 	$(document).ready(function(){
+
+		// setup System
+		socket.on('setupScore', function(data){
+			if(count > 0) return false;
+			
+			for(var i = 0; i<data.length; i++)
+			{
+				$('#team').append('<option value="' + (i+1) + '">' + (i+1) + '</option>');
+			}
+			count++;
+		});
 
 		// Splash Screen
 		$('#splashScreen').click(function()
@@ -34,6 +46,14 @@
 		{
 			socket.emit('displayQuestion');
 		});
+
+		//On score changing
+		$('#changeScore').click(function()
+		{
+			var data = [$('#team').val(), $('#points').val()]
+			socket.emit('scoreSet', data);
+		});
+		
 
 	});
 	</script>
@@ -56,16 +76,14 @@
 					<br><br>
 				<form id="addScore">
 					<label for="team">Select Team</label>
-					<select name="team" id="">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
+					<select name="team" id="team">
+						<!-- nanti di isi pas setup system ;) -->
 					</select>
 
 					<label for="Points"></label>
-					<input type="text" name="points">
+					<input type="text" name="points" id="points">
 
-					<button class="btn btn-primary">Set Score</button>
+					<button class="btn btn-primary" id="changeScore">Set Score</button>
 				</form>
 			</div>
 			<div class="col-lg-3">

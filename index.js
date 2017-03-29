@@ -17,6 +17,12 @@ var bodyParser = require('body-parser');
 var multer = require ('multer');
 var fs = require ('fs');
 
+// Question counter
+var questionCount = 0;
+
+// Scores array for team score
+var scores = [];
+
 //Mutlter Upload
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -57,14 +63,22 @@ io.on('connection', function(socket){
 	// Score
 	socket.on('scoreScreen', function()
 	{
-		io.emit('scoreScreen');
+		io.emit('scoreScreen', scores);
 	});
 
 	// Question
 	socket.on('displayQuestion',function(){
-		questions.find({"id": 1},'question').then((docs) => {
+		// itu idnya di bikin ascending
+		questions.find({"id": questionCount},'question').then((docs) => {
 			io.emit('displayQuestion', docs[0].question);
+			questionCount++;
 		});
+	});
+
+	// On score change
+	socket.on('scoreSet', function(data){
+		scores[data[0]-1] += parseInt(data[1]);
+		io.emit('scoreScreen', scores);
 	});
 });
 
@@ -123,6 +137,31 @@ app.post('/process_post', upload.single('question_image') ,function (req, res, n
 
 		res.send(response);
    	});
+});
+
+
+// setup system (nanti kasih html buat orang setup)
+app.get('/setup_system',function(req, res){
+	for(var i=0; i<20; i++)
+	{
+		scores[i] = 0;
+	}
+
+	//Broadcast
+	io.on('connection', function(socket){	
+		socket.emit('setupScore', scores);
+	});
+	
+	res.send('Setup Success!');
+});
+
+// reset question counter
+app.get('/reset_system', function(req, res){
+
+	questionCount = 0;
+	scores = [];
+
+	res.send('System reseted!');
 });
 
 // get question
