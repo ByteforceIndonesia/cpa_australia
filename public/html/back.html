@@ -48,10 +48,18 @@
 		});
 
 		//On score changing
-		$('#changeScore').click(function()
+		$('#changeScoreCorrect').click(function()
 		{
-			var data = [$('#team').val(), $('#points').val()]
-			socket.emit('scoreSet', data);
+			var data = [$('#team').val(), 30]
+			// socket.emit('scoreSet', data);
+			socket.emit('teamCorrect', data);
+		});
+
+		$('#changeScoreIncorrect').click(function()
+		{
+			var data = [$('#team').val(), -10]
+			// socket.emit('scoreSet', data);
+			socket.emit('teamIncorrect', data);
 		});
 		
 
@@ -79,11 +87,11 @@
 					<select name="team" id="team">
 						<!-- nanti di isi pas setup system ;) -->
 					</select>
+					<!-- correct -->
+					<button class="btn btn-primary" id="changeScoreCorrect">Correct</button>
 
-					<label for="Points"></label>
-					<input type="text" name="points" id="points">
-
-					<button class="btn btn-primary" id="changeScore">Set Score</button>
+					<!-- incorrect -->
+					<button class="btn btn-primary" id="changeScoreIncorrect">Incorrect</button>
 				</form>
 			</div>
 			<div class="col-lg-3">

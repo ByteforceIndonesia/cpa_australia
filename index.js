@@ -69,9 +69,11 @@ io.on('connection', function(socket){
 	// Question
 	socket.on('displayQuestion',function(){
 		// itu idnya di bikin ascending
-		questions.find({"id": questionCount},'question').then((docs) => {
-			io.emit('displayQuestion', docs[0].question);
+		questions.find({"id": questionCount}).then((docs) => {
+			io.emit('displayQuestion', docs[0]);
 			questionCount++;
+
+			console.log(docs[0]);
 		});
 	});
 
@@ -79,6 +81,20 @@ io.on('connection', function(socket){
 	socket.on('scoreSet', function(data){
 		scores[data[0]-1] += parseInt(data[1]);
 		io.emit('scoreScreen', scores);
+	});
+
+	// Team correct
+	socket.on('teamCorrect', function(data){
+		scores[data[0]-1] += parseInt(data[1]);
+		var send = [data[0], data[1]];
+		io.emit('teamCorrect', send);
+	});
+
+	// Team incorrect
+	socket.on('teamIncorrect', function(data){
+		scores[data[0]-1] += parseInt(data[1]);
+		var send = [data[0], data[1]];
+		io.emit('teamIncorrect', send);
 	});
 });
 

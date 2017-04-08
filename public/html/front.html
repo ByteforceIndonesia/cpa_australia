@@ -3,9 +3,13 @@
 		<title>Scoring System</title>
 	</head>
 
+	<!-- Styling -->
+	<link rel="stylesheet" href="../css/style.css">
+
 	<!-- script -->
 	<script src="../js/jquery-3.1.1.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="../js/velocity.min.js"></script>
 	<script>
 
 	var socket = io();
@@ -19,8 +23,14 @@
 		$('questionTimer').removeClass('hidden');
 	}
 
-	function startCounter ()
+	function startCounter (end)
 	{
+		if(end)
+		{
+			return;
+		}
+
+
 		$('questionTimer').removeClass('hidden');
 		$('.questionTimer').html(i);
 		i--;
@@ -37,34 +47,57 @@
 
 	function populateScore(scores)
 	{
-		// Clean the Classes
-		$('.groupWrapper').html('');
+		// Clean the content
+		$('.scoreSticks').html('');
 
 		//Create the Classes
 		for(var i=0; i< scores.length; i++)
 		{
-			$('.groupWrapper').append('<div class="groupScore"></div>');
+			$('.scoreSticks').append(
+								'<div class="scoreStick">' +
+									'<div class= "scoreStickSquare">' +
+										'<div class="scoreStickR">' +
+										'</div>' +
+										'<div class="scoreStickT">' +
+											'0' +
+										'</div>' +
+									'</div>' +
+									'<div class="scoreStickBar">' +
+									'</div>' +
+									'<div class="scoreStickNumber">' +
+										'0' +
+									'</div>' +
+								'</div>');
 		}
 
 		// Fill the classes
 		for(var i = 0; i<scores.length; i++)
 		{
-			$('.groupScore:nth-child(' + (i+1) + ')').html(scores[i]);
+			$('.scoreStick:nth-child(' + (i+1) + ')>.scoreStickNumber').html(scores[i]);
 		}
 	}
 
 
 	$(document).ready(function(){
+
+		// Remove everything on load
+		initial();
+		removeAll();
+		removeBig();
+
+		wordPopShow();
 	
 		//Splash Screen
 		socket.on('splashScreen', function(){
 			$('.screen').addClass('hidden');
 			$('.splashScreen').removeClass('hidden');
+			wordPopShow();
 		});
 
 		// Score
 		socket.on('scoreScreen', function(scores){
 			populateScore(scores);
+			showScorePointRace();
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
 		});
@@ -73,12 +106,31 @@
 		socket.on('displayQuestion', function(question){
 			$('.screen').addClass('hidden');
 			$('.questionView').removeClass('hidden');
-			$('.questionField').html(question);
-			resetCounter();
-			startCounter();
+			$('.mbSoal').html(question.question);
+			// $('.questionImage').html(question.image);
+			// end the old counter
+			// startCounter(true);
+
+			// // restart and start a new one
+			// resetCounter();
+			// startCounter(false);
+			showSoalLoadTimer();
 		})
 
 
+		socket.on('teamCorrect', function(data){
+			$('.scoreSticks:nth-child(' + (data[0]+1) + ')>.scoreStickNumber').html(data[1]);
+			$('.screen').addClass('hidden');
+			$('.correctLayout').removeClass('hidden');
+			wordPopCorrect("correct");
+		});
+
+		socket.on('teamIncorrect', function(data){
+			$('.scoreSticks:nth-child(' + (data[0]+1) + ')>.scoreStickNumber').html(data[1]);
+			$('.screen').addClass('hidden');
+			$('.correctLayout').removeClass('hidden');
+			wordPopCorrect("incorrect team");
+		});
 	});
 
 	</script>
@@ -106,28 +158,138 @@
 	</style>
 
 	<body>
-		<div class="container-fluid">
-			<div class="row">
-				<!-- splash screen -->
-				<div class="splashScreen screen">
-					<h1>This is a splash screen</h1>
+			<!-- splash screen -->
+			<div class="splashScreen screen">
+				<div class="blackout">
+					<div class="wordPop">
+						<div class="wordPopSquare">
+						</div>
+						<div class="wordPopSquareL">
+						</div>
+						<div class="wordPopSquareC">
+						</div>
+						<div class="wordPopBox">
+							START
+						</div>
+					</div>
 				</div>
+			</div>
 
-				<!-- score overview -->
-				<div class="scoreOverview screen hidden">
-					<h1>Score overview</h1>
-
-					<div class="groupWrapper"></div>
+			<!-- score overview -->
+			<div class="scoreOverview screen hidden">
+				<div class = "conboard">
+					<div class="groupWrapper">
+						<div class= "contentInside2">
+							<div class= "messageBoard sticks" >
+								<div class="scoreSticks">
+								<!-- Going to be populated -->
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+			</div>
 
-				<!-- display question -->
-				<div class="questionView screen hidden">
-					<h1>Question View</h1>
-					<div class="questionField">&nbsp</div>
-					<div class="questionTimer"></div>
-					<div class="timerDone hidden">Time is Up!</div>
+			<!-- display question -->
+			<div class="questionView screen hidden">
+				<div class="questionField">
+					<div class = "conboard">
+						<!-- Timer -->
+						<div class= "timerWrapper">
+							<div class="timerIconEmbed">
+								<!-- <embed src="timer2.svg" class="timerEmbed2"> -->
+									<embed src="../images/timerbase.svg" class="timerEmbedBase">
+										<embed src="../images/timerCount.svg" class="timerEmbedCount">
+										<div class="timerNumber">120</div>
+							</div>
+							<div class="timerOutline">
+								<div class="timerFill">
+									<div class="timerFill2"></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Question -->
+						<div class= "contentInside">
+							<div class= "messageBoard">
+							<p class = "mbSoal">I had been searching about far below the levels that we slaves were supposed to frequent—possibly fifty feet beneath the main floor of the building—among a network of corridors and apartments, when I came suddenly upon three Mahars curled up upon a bed of skins. At first I thought they were dead, but later their regular breathing convinced me of my error. Like a flash the thought came to me of the marvelous opportunity these sleeping reptiles offered as a means of eluding the watchfulness of our captors and the Sagoth guards.</p>
+
+								<ul class="multipleChoiceAnswer">
+									<li class="AFirst correct">
+										<div class="listPin">
+											<div class="listPinR"></div>
+											<div class="listPinT">A</div>
+										</div>
+										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
+									</li>
+
+									<li class="ASecond wrong">
+										<div class="listPin">
+											<div class="listPinR"></div>
+											<div class="listPinT">B</div>
+										</div>
+										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
+									</li>
+
+									<li class="Athird">
+										<div class="listPin">
+											<div class="listPinR"></div>
+											<div class="listPinT">C</div>
+										</div>
+										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
+									</li>
+
+									<li class="AFourth">
+										<div class="listPin">
+											<div class="listPinR"></div>
+											<div class="listPinT">D</div>
+										</div>
+										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="questionImage">
+
+				</div>
+				<!-- <div class="questionTimer"></div> -->
+				<div class="timerDone hidden">
+					
+				</div>
+			</div>
+
+			<!-- Correct -->
+			<div class="correctLayout hidden screen">
+				<div class="correctAnswer">
+					CORRECT!!
+				</div>
+				<div class="correctAnswerString">test
+				</div>
+				<div class="blackoutWrapper">
+					<div class="scorePieceWrapper enlargeBlackout">
+						<div class="scoreBar">
+							<div class="scoreSquare">
+								<div class="scoreSquareR">
+
+								</div>
+								<div class="scoreSquareT">
+									32
+								</div>
+							</div>
+							<div class="scoreBarContent">
+								<span class="scorePosition">#42</span><br>
+								<span class="scoreNumber">320+30</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
+		<!-- animations -->
+		<script src="../js/generalAnim.js"></script>
+
 	</body>
 </html>

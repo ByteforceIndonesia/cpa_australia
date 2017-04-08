@@ -1,0 +1,501 @@
+body{
+	margin : 0px;
+	padding : 0px;
+	background-color : #afafaf;
+font-family : sans-serif;
+}
+
+.conboard{
+	display  : flex;
+	flex-direction: column ;
+	padding : 50px;
+	background-color : #1d3246;
+
+	justify-content : center;
+}
+
+.contentInside{
+	display : flex;
+	width : 100%;
+	transform-origin : 0% 0%;
+
+	justify-content : space-around;
+
+}
+
+.contentInside2{
+	display : flex;
+	width : 100%;
+	transform-origin : 0% 0%;
+
+	justify-content : space-around;
+
+}
+.timerOutline{
+	margin-left : 5%;
+	padding : 12px;
+	width : 100%;
+	height : 40px;
+	background-color : #ffe680;
+
+
+}
+
+.timerWrapper{z-index : 299;
+	display : flex;
+	margin-left : 4px;
+	width :98%;
+	height : 60px;
+
+	align-items : center;
+}
+
+.timerFill{
+	overflow : hidden;
+	width : 99%;
+	height : 100%;
+	background-color : #d4aa00;
+
+}
+
+
+.timerFill2{
+	width : 100%;
+	height : 100%;
+	background-color : #66ff00;
+	transform : scaleX(0.8);
+	transform-origin : 0%;
+
+
+}
+
+.timerIconEmbed{
+	position : absolute;
+	width : 120px;
+	height : 120px;
+
+}
+
+
+.timerEmbed2{
+	position : absolute;
+	z-index: 301;
+	width : 120px;
+	height : 120px;
+
+}
+.timerEmbedBase{
+	position : absolute;
+	z-index: 300;
+	width : 120px;
+	height : 120px;
+
+}
+
+.timerEmbedCount{
+	position : absolute;
+	z-index: 300;
+	padding : 20px;
+	width : 80px;
+	height : 80px;
+
+}
+
+
+.timerNumber{
+	position : absolute;
+	z-index : 310;
+	display : flex;
+	flex-direction: column;
+	width : 120px;
+	height : 120px;
+	color : white;
+	text-align : center;
+font-weight : 600;font-size : 48px;
+
+	justify-content: center;
+}
+
+
+
+.messageBoard{z-index : 10;
+	display : flex;
+	margin-top : -10px;
+	margin-bottom : 50px;
+	padding : 50px;
+	padding-top : 30px;
+	width :85%;
+	height : auto;
+	border-radius : 5px;
+	background-color : #fff6d5;
+
+	flex-wrap : wrap;
+	align-items : center;
+}
+
+.messageBoard.sticks{
+	flex-direction : column;
+	padding-top : 60px;
+
+}
+.scoreSticks{
+	display : flex;
+	flex-direction : row;
+	width : 100%;
+
+}
+.messageBoardTitle{
+	margin-top : 72px;
+	width : 100%;
+	height : 40px;
+color : #D35400;
+font-weight : 600;
+font-size : 48px;
+}
+
+/*score bar*/
+.scoreBar{
+	width : 300px;
+	height : 80px;
+	border-radius : 4px;
+	background-color : #fff6d5;
+}
+
+.scoreSquare{
+	position : relative;
+	float : left;
+	width : 80px;
+	height : 80px;
+	border-radius : 4px;
+	background-color : #d4aa00;
+}
+.scoreSquareR{
+	position : absolute;
+	width : 80px;
+	height : 80px;
+	border-radius : 4px;
+	background-color : #ffcc00;
+	transform : rotate(45deg);
+}
+.scoreSquareT{
+	position : absolute;
+	display : flex;
+flex-direction: column;
+	width : 80px;
+	height : 80px;
+	border-radius : 4px;
+	background-color : transparent;
+color : white;
+	text-align : center;
+	font-size : 60px;
+
+	justify-content:center;
+	}
+
+
+
+.scoreBarContent{
+		position : relative;
+	float : left;
+margin-left : 30px;
+		padding-top : 10px;
+	width : 190px;
+	height : 80px;
+	text-align: left;
+}
+
+
+.scorePosition{
+color : #0088aa;
+	font-style : italic;
+	font-size : 24px;
+}
+
+.scoreNumber{
+	color : #004d61;
+	font-weight : 600;
+	font-size : 30px;
+}
+
+/*messageBoard*/
+.messageBoard p{
+	font-size : 30px;
+}
+.multipleChoiceAnswer{
+	padding-left : 0px;
+	width : 100%;
+}
+.multipleChoiceAnswer li{margin-top : 20px;
+margin-left : 20px;
+padding : 10px;
+padding-left : 30px;
+border-radius : 4px;
+background-color : white;
+list-style: none;
+font-size : 24px;
+
+}
+.multipleChoiceAnswer li.correct{
+	background-color : #2ECC71;
+	color : white;
+}
+.multipleChoiceAnswer li.wrong{
+	background-color : #E74C3C;
+	color : white;
+}
+.listPin{
+	float : left;
+	margin-left : -50px;
+	width : 40px;
+	height : 40px;
+	background-color : transparent;
+}
+.listPinR{
+	position : absolute;
+	width : 40px;
+	height : 40px;
+	background-color : #ffcc00;
+	transform : rotate(45deg);
+}
+.listPinT{
+	position : absolute;
+	display : flex;
+	flex-direction : column;
+	width : 40px;
+	height : 40px;
+	color : white;
+	text-align: center;
+	font-size : 24px;
+
+	justify-content: center;
+
+}
+/*team blabla got correct answer*/
+
+.blackout{
+	position : fixed;
+	top : 0px;
+	left : 0px;
+	z-index : 600;
+	display : flex;
+	flex-direction: column;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(0,0,0,0.6);
+	text-align: center;
+
+	justify-content: center;
+}
+.blackoutWrapper{
+	display : flex;
+	flex-direction: row;
+	width : 100%;
+
+		justify-content: center;
+
+}
+
+.correctAnswer{
+	margin-bottom : 100px;
+	color : white;
+	font-weight : 600;
+	font-size : 180px;
+}
+
+.pointsCorrectAnswer{
+	margin-top : 100px;
+	color : white;
+	font-weight : 600;
+	font-size : 120px;
+
+}
+.enlargeBlackout{
+	transform : scale(2);
+}
+
+.enlargeBlackout .scoreBarContent{
+	text-align : left;
+}
+
+/*timestick*/
+
+.scoreStick{
+	margin-right : 20px;
+	width : 40px;
+	height : 400px;
+	background-color : transparent;
+	transform-origin:bottom;
+}
+.scoreStickBar{
+	width : 40px;
+	height : 400px;
+	background-color : #2aff80;
+}
+
+.scoreStickSquare{
+	margin-bottom : -20px;
+	width : 40px;
+	height :40px;
+	background-color : transparent;
+}
+
+
+.scoreStickR{
+	position : absolute;
+	width : 40px;
+	height :40px;
+	background-color : #ffcc00;
+	transform : rotate(45deg);
+}
+
+.scoreStickT{
+	position : absolute;
+	display : flex;
+	flex-direction : column;
+	width : 40px;
+	height :40px;
+	background-color : transparent;
+	color : white;
+	text-align : center;
+	font-size : 24px;
+
+	justify-content : center;
+}
+
+.scoreStickNumber{
+	padding-top : 10px;
+		padding-bottom : 10px;
+	background-color : white;
+	color : black;
+	text-align : center;
+	font-size : 14px;
+}
+
+
+
+/*wordpop*/
+
+.correctLayout{
+	opacity : 0;
+}
+
+.wordPop{
+	position : fixed;
+	top : -1000px;
+	left : -25px;
+	z-index : 800;
+	display : flex;
+	margin-left : 30%;
+	width : 40%;
+	height : 300px;
+	background-color : transparent;
+
+}
+.wordPopSquare{
+	position : absolute;
+	z-index : 801;
+	display  :block;
+	margin-top : 25px;
+	width : 250px;
+	height : 250px;
+	border-radius : 25px;
+	background-color : #C8F7C5;
+box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.39);
+	transform : rotate(45deg);
+}
+.wordPopSquareL{
+	position : absolute;
+	right : 0px;
+	z-index : 801;
+	display  :block;
+	margin-top : 25px;
+	width : 250px;
+	height : 250px;
+	border-radius : 25px;
+	background-color : #C8F7C5;
+box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.39);
+	transform : rotate(45deg);
+}
+.wordPopSquareC{
+	position : absolute;
+	top : -50px;
+	right : 50%;
+	z-index : 801;
+	display  :block;
+	margin-right : -200px;
+	width : 400px;
+	height : 400px;
+	border-radius : 25px;
+	background-color : #1BBC9B;
+box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.39);
+	transform : rotate(45deg);
+}
+
+.wordPopBox{
+	z-index : 810;
+	display : flex;
+	flex-direction: column;
+	margin : 30px;
+	width : 100%;
+	border-radius : 25px;
+	background-color :#2ECC71;
+box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
+	color : white;
+	text-align : center;
+	font-weight : 600;
+	font-size : 160px;
+
+	justify-content: center;
+}
+
+
+/*score board top 10*/
+.scorePieceWrapper{
+	margin-bottom : 25px;
+}
+
+
+/*trallalaa*/
+.correctAnswerString{
+	display : block;margin : 50px;
+	margin-bottom : 100px;
+	margin-left : 21%;
+	padding : 4%;
+	min-height : 100px;
+	width : 50%;
+	border-radius : 8px;
+	background-color : #2ECC71;
+	color : white;
+	font-size : 36px;
+}
+
+
+.topFifteenLayout{position : fixed;
+	display : flex;
+	width : 100%;
+
+	flex-wrap : wrap;
+	justify-content: space-around;
+}
+.fifteenTitle{
+	margin-bottom : 50px;
+	width : 100%;
+	color : white;
+	font-weight : 600;
+	font-size : 120px;
+}
+
+.topFifteenLayout .scorePieceWrapper{
+	margin-bottom : 60px;
+	transform : scale(1.4);
+	transform-origin : center;
+}
+
+.columnFifteen{
+	display : flex;
+	width : 25%;
+
+		justify-content: center;
+		flex-wrap : wrap;
+
+}
