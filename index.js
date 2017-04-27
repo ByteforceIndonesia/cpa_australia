@@ -54,7 +54,6 @@ app.get('/controller', function(req, res)
 	questions.find({}, {sort: {id : 1}}).then((docs) => {
 		// res.sendFile(__dirname + '/public/html/back.html');
 		res.render('controller', {questions: docs});
-		console.log(docs);
 	});
 });
 
@@ -86,8 +85,6 @@ io.on('connection', function(socket){
 
 			// Greyout button on controller
 			io.emit('greyOut', questionCount);
-
-			console.log(docs[0]);
 		});
 	});
 

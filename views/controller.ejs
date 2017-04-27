@@ -70,7 +70,7 @@
 		// Display Question
 		$('.questionShow').click(function()
 		{
-			socket.emit('displayQuestion', $(this).val());
+			socket.emit('displayQuestion', parseInt($(this).val()));
 		});
 
 		//On score changing
