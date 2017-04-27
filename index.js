@@ -12,13 +12,16 @@ var monk = require('monk');
 var db = monk('localhost:27017/cpa_australia');
 var questions = db.get('questions');
 
+// Template Engine
+app.set('view engine', 'ejs');
+
 //Files Plugin
 var bodyParser = require('body-parser');
 var multer = require ('multer');
 var fs = require ('fs');
 
 // Question counter
-var questionCount = 0;
+var questionCount = [];
 
 // Scores array for team score
 var scores = [];
@@ -48,8 +51,12 @@ app.get('/', function(req, res){
 //Control
 app.get('/controller', function(req, res)
 {
-	res.sendFile(__dirname + '/public/html/back.html');
-})
+	questions.find({}, {sort: {id : 1}}).then((docs) => {
+		// res.sendFile(__dirname + '/public/html/back.html');
+		res.render('controller', {questions: docs});
+		console.log(docs);
+	});
+});
 
 //get input from controller
 io.on('connection', function(socket){
@@ -67,11 +74,18 @@ io.on('connection', function(socket){
 	});
 
 	// Question
-	socket.on('displayQuestion',function(){
+	socket.on('displayQuestion',function(id){
 		// itu idnya di bikin ascending
-		questions.find({"id": questionCount}).then((docs) => {
+		questions.find({"id": id}).then((docs) => {
+			
+			// Display Question for Client
 			io.emit('displayQuestion', docs[0]);
-			questionCount++;
+
+			// Store the displayed Question id
+			questionCount[id] = 1;
+
+			// Greyout button on controller
+			io.emit('greyOut', questionCount);
 
 			console.log(docs[0]);
 		});
@@ -158,17 +172,28 @@ app.post('/process_post', upload.single('question_image') ,function (req, res, n
 
 // setup system (nanti kasih html buat orang setup)
 app.get('/setup_system',function(req, res){
-	for(var i=0; i<20; i++)
-	{
-		scores[i] = 0;
-	}
 
-	//Broadcast
-	io.on('connection', function(socket){	
-		socket.emit('setupScore', scores);
-	});
+	// Get all the question in db
+	questions.find({}, {sort: {id : 1}}).then((docs) => {
+
+		for(var i=0; i<20; i++)
+		{
+			scores[i] = 0;
+		}
+
+		for(var i=0; i<docs.length; i++)
+		{
+			questionCount[i] = 0;
+		}
 	
-	res.send('Setup Success!');
+		//Broadcast
+		io.on('connection', function(socket){	
+			socket.emit('setupScore', scores);
+		});
+		
+		res.send('Setup Success!');
+
+	});	
 });
 
 // reset question counter

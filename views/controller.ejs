@@ -12,6 +12,13 @@
 	<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
 	<script src="../js/bootstrap.min.js"></script>
 
+    <style>
+        .greyedOut
+        {
+            background:red;
+        }
+    </style>
+
 	<script>
 	var socket = io();
 	var count = 0;
@@ -37,6 +44,17 @@
 			}
 		});
 
+        // Greyout already showed question
+        socket.on('greyOut', function(questionsArray){
+            for(var i = 0; i<questionsArray.length; i++)
+            {
+                if(questionsArray[i] == 1)
+                {
+                    $("#"+i).addClass("greyedOut");
+                }
+            }
+        });
+
 		// Splash Screen
 		$('#splashScreen').click(function()
 		{
@@ -50,9 +68,9 @@
 		});
 
 		// Display Question
-		$('#displayQuestion').click(function()
+		$('.questionShow').click(function()
 		{
-			socket.emit('displayQuestion');
+			socket.emit('displayQuestion', $(this).val());
 		});
 
 		//On score changing
@@ -105,19 +123,20 @@
 			<div class="col-lg-3">
 				<h3>Question Control</h3>
 				<br>
-				<!--<button id="displayQuestion" class="btn btn-primary">Display Question</button>-->
 				<table class="table table-bordered">
 					<thead>
 						<tr>
 							<td>No</td>
 							<td>Question</td>
+                            <td>Action</td>
 						</tr>
 					</thead>
 					<tbody id="bodyQuestion">
 						<% questions.forEach(function(question){ %>
 							<tr>
-								<td><%= question.id %></td>
+								<td><%= question.id+1 %></td>
 								<td><%= question.question %></td>
+                                <td><button id="<%= question.id %>" value="<%= question.id %>" class="questionShow btn btn-primary">Show</button></td>
 							</tr>
 						<% }); %>
 					</tbody>
