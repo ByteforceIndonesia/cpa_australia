@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
     cb(null, __dirname +'/temp/uploaded_images')
   },
   filename: function (req, file, cb) {
-    cb(null, 'uploaded')
+    cb(null, file.fieldname)
   }
 });
 var upload = multer({ storage: storage });
@@ -116,7 +116,7 @@ app.get('/add_question', function(req, res){
 })
 
 // Question
-app.post('/process_post', upload.single('question_image') ,function (req, res, next)
+app.post('/process_post', upload.fields([{name:'question_image', maxCount: 1}, {name:'answer_image', maxCount: 1}]) ,function (req, res, next)
 {
 	var answers = req.body['answers'];
 	var count=0;
@@ -138,7 +138,8 @@ app.post('/process_post', upload.single('question_image') ,function (req, res, n
 			question: req.body.question
 		}
 
-		response.image = '/temp/uploaded_images/' + response.id;
+		response.imageQues = '/temp/uploaded_images/ques_' + response.id;
+		response.imageAns = '/temp/uploaded_images/ans_' + response.id;
 
 		//Insert Answers
 		if (Array.isArray(answers))
@@ -151,7 +152,12 @@ app.post('/process_post', upload.single('question_image') ,function (req, res, n
 		}
 
 		//Move uploaded file
-		fs.rename(__dirname + '/temp/uploaded_images/uploaded', __dirname + '/temp/uploaded_images/' + response.id, function(err){
+		fs.rename(__dirname + '/temp/uploaded_images/answer_image', __dirname + '/temp/uploaded_images/ans_' + response.id, function(err){
+		    if (err) 
+	    	console.log(err);
+		});
+
+		fs.rename(__dirname + '/temp/uploaded_images/question_image', __dirname + '/temp/uploaded_images/ques_' + response.id, function(err){
 		    if (err) 
 	    	console.log(err);
 		});
