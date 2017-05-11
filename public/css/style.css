@@ -1,7 +1,7 @@
 body{
 	margin : 0px;
 	padding : 0px;
-	background-color : #afafaf;
+	background-color : #1d3246;
 font-family : sans-serif;
 }
 
@@ -21,6 +21,16 @@ font-family : sans-serif;
 
 	justify-content : space-around;
 
+}
+.answerShowImage{
+	display:none;
+
+	margin-toP:16px;
+}
+.imagePrevBig{
+	display:none;
+
+	margin-toP:16px;
 }
 
 .contentInside2{
@@ -55,9 +65,30 @@ font-family : sans-serif;
 	width : 99%;
 	height : 100%;
 	background-color : #d4aa00;
-
 }
 
+.imagePrev{
+	width : 48%;
+}
+.imagePrevBig{
+	margin-left : 20%;
+	width : 60%;
+}
+
+.mbSoalG{
+	flex-direction: column;
+	width : 48%;
+
+	justify-content: flex-start;
+}
+
+.mbSoalBg{
+	flex-direction: column;
+	margin-left : 20%;
+	width : 60%;
+
+	justify-content: flex-start;
+}
 
 .timerFill2{
 	width : 100%;
@@ -65,8 +96,6 @@ font-family : sans-serif;
 	background-color : #66ff00;
 	transform : scaleX(0.8);
 	transform-origin : 0%;
-
-
 }
 
 .timerIconEmbed{
@@ -120,6 +149,7 @@ font-weight : 600;font-size : 48px;
 
 .messageBoard{z-index : 10;
 	display : flex;
+	flex-direction: column;
 	margin-top : -10px;
 	margin-bottom : 50px;
 	padding : 50px;
@@ -133,6 +163,15 @@ font-weight : 600;font-size : 48px;
 	align-items : center;
 }
 
+.messageBoardWrapper{
+	display: flex;
+	flex-direction: row;
+	height : auto;
+
+align-items:flex-start;
+	justify-content: space-between;
+}
+
 .messageBoard.sticks{
 	flex-direction : column;
 	padding-top : 60px;
@@ -142,6 +181,7 @@ font-weight : 600;font-size : 48px;
 	display : flex;
 	flex-direction : row;
 	width : 100%;
+	height : 700px;
 
 }
 .messageBoardTitle{
@@ -219,16 +259,19 @@ color : #0088aa;
 
 /*messageBoard*/
 .messageBoard p{
-	font-size : 30px;
+	font-size : 36px;
 }
 .multipleChoiceAnswer{
 	padding-left : 0px;
 	width : 100%;
 }
-.multipleChoiceAnswer li{margin-top : 20px;
+.multipleChoiceAnswer li{
+float : left;
+margin-top : 20px;
 margin-left : 20px;
 padding : 10px;
 padding-left : 30px;
+width : 45%;
 border-radius : 4px;
 background-color : white;
 list-style: none;
@@ -242,6 +285,10 @@ font-size : 24px;
 .multipleChoiceAnswer li.wrong{
 	background-color : #E74C3C;
 	color : white;
+}
+.multipleChoiceAnswer p{
+	margin : 0px;
+	padding : 0px;
 }
 .listPin{
 	float : left;
@@ -296,8 +343,10 @@ font-size : 24px;
 }
 
 .correctAnswer{
+	margin-top : 8%;
 	margin-bottom : 100px;
 	color : white;
+	text-align: center;
 	font-weight : 600;
 	font-size : 180px;
 }
@@ -320,16 +369,21 @@ font-size : 24px;
 /*timestick*/
 
 .scoreStick{
+	display : flex;
+	flex-direction: column;
 	margin-right : 20px;
 	width : 40px;
-	height : 400px;
+	height : 600px;
 	background-color : transparent;
 	transform-origin:bottom;
+
+	justify-content: flex-end;
 }
 .scoreStickBar{
 	width : 40px;
-	height : 400px;
+	height : 600px;
 	background-color : #2aff80;
+	transform-origin:bottom;
 }
 
 .scoreStickSquare{
@@ -439,7 +493,7 @@ box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.39);
 	width : 100%;
 	border-radius : 25px;
 	background-color :#2ECC71;
-box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
+	box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
 	color : white;
 	text-align : center;
 	font-weight : 600;
@@ -457,7 +511,8 @@ box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
 
 /*trallalaa*/
 .correctAnswerString{
-	display : block;margin : 50px;
+	display : block;
+	margin : 50px;
 	margin-bottom : 100px;
 	margin-left : 21%;
 	padding : 4%;
@@ -478,7 +533,7 @@ box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
 	justify-content: space-around;
 }
 .fifteenTitle{
-	margin-bottom : 50px;
+	margin-bottom : 50px;
 	width : 100%;
 	color : white;
 	font-weight : 600;
@@ -486,7 +541,7 @@ box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
 }
 
 .topFifteenLayout .scorePieceWrapper{
-	margin-bottom : 60px;
+	margin-bottom : 60px;
 	transform : scale(1.4);
 	transform-origin : center;
 }
@@ -497,5 +552,171 @@ box-shadow: 0px 0px 67px 0px rgba(0,0,0,0.20);
 
 		justify-content: center;
 		flex-wrap : wrap;
+}
 
+
+.newTimer{
+	position : fixed;
+	z-index : 600;
+	width : 100%;
+	height : 100%;
+	background-color : #FDE3A7;
+}
+
+
+.FinalAnswerFrame{
+	position : fixed;
+	bottom : 0px;
+	z-index : 610;
+	display : flex;
+	flex-direction: row;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(255,255,255,0.6);
+
+	justify-content: center;
+}
+.AnswerFrame{
+	display: flex;
+	flex-direction: column;
+	margin-top : 5%;
+	width :80%;
+	height : 80%;
+	border-radius : 40px;
+	background-color : #2ECC71;
+	text-align: center;
+
+	justify-content: flex-start;
+
+}
+
+.AnswerTitle{
+	margin-top : -40px;padding-top : 24px;padding-bottom : 24px;
+	width : 500px;
+	border-radius : 20px;background-color : #26A65B;
+	color : White;
+	font-weight: 600;
+	font-size : 600%;
+}
+
+.AnswerText{
+	padding : 5%;
+	color : white;
+	font-size : 320%;
+}
+
+.freezeFrame{
+	position : fixed;
+	top : 0px;
+	z-index : 610;
+	display : flex;
+	flex-direction: row;
+	width : 100%;
+	height : 20%;
+	background-color : rgba(255,255,255,0.0);
+
+	justify-content: center;
+}
+
+.freezeLabel{
+	margin-top : 30px;color : white;
+	letter-spacing: 12px;
+	font-weight : 600;
+	font-size : 500%;
+	opacity : 0;
+}
+
+
+.correctAnswerFrame{
+	position : fixed;
+	bottom : 0px;
+	z-index : 610;
+	display : flex;
+	flex-direction: row;
+	width : 100%;
+	height : 20%;
+	background-color : rgba(255,255,255,0.0);
+
+	justify-content: center;
+}
+
+.answerLabel{
+	display :flex;
+	width : 400px;
+	height: 120px;
+	border-radius: 40px;
+	background-color:#00B16A;
+	opacity : 0;
+}
+
+.TitleScore{
+	font-size : 100px;
+}
+
+.answerTabs{
+	display: flex;
+	flex-direction: column;
+	margin-top : 20px;
+	margin-top : 20px;
+	margin-left : 20px;
+	width : 300px;
+	height : 80px;
+	color : white;font-size : 320%;
+
+	justify-content: center;
+}
+
+.answerCircle{
+	display : flex;
+	flex-direction: column;margin: 20px;
+	width : 80px;
+	height : 80px;
+	border-radius:  100%;
+	background-color : #87D37C;
+color : white;
+	text-align:center;
+	font-weight : 600;
+font-size : 200%;
+
+	justify-content: center;
+
+}
+
+
+
+.BoxTimer{
+	display : flex;
+flex-direction: column;
+		margin-top : 5%;
+	margin-left : 10%;
+	width : 80%;
+	height : 80%;	border-radius : 25px;
+	background-color : #22A7F0;justify-content: center;
+
+}
+
+.TimerTitle{
+display : flex;
+	color : white;
+letter-spacing: 12px;
+	font-size : 82px;
+
+justify-content: center;
+}
+.TimerSubtitle{
+display : flex;
+	color : white;
+letter-spacing: 4px;
+	font-size : 48px;
+
+justify-content: center;
+
+}
+.TimerContent{
+	display : flex;
+	color : white;
+	font-weight : 600;
+	font-size : 240px;
+
+	justify-content: center;
 }

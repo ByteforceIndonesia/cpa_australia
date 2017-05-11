@@ -45,13 +45,21 @@
 		}
 	}
 
-	function populateScore(scores)
+	function populateScore(scores,page)
 	{
+		var x = 0;
 		// Clean the content
 		$('.scoreSticks').html('');
+		if(page=="p2"){
+			x= 14;
+				$(".TitleScore").html('Scoreboard 2/2');
+		} else{
+			$(".TitleScore").html('Scoreboard 1/2');
+		}
+		var c = 0;
 
 		//Create the Classes
-		for(var i=0; i< scores.length; i++)
+		for(var i=x; i< scores.length; i++)
 		{
 			$('.scoreSticks').append(
 								'<div class="scoreStick">' +
@@ -59,19 +67,23 @@
 										'<div class="scoreStickR">' +
 										'</div>' +
 										'<div class="scoreStickT">' +
-											'0' +
+											(i+1).toString() +
 										'</div>' +
 									'</div>' +
-									'<div class="scoreStickBar">' +
+									'<div class="scoreStickBar" style = "height:'+(scores[i]/360)*600+'px;">' +
 									'</div>' +
 									'<div class="scoreStickNumber">' +
 										'0' +
 									'</div>' +
 								'</div>');
+								c++;
+								if(c>=14){
+									break;
+								}
 		}
 
 		// Fill the classes
-		for(var i = 0; i<scores.length; i++)
+		for(var i = x; i<scores.length; i++)
 		{
 			$('.scoreStick:nth-child(' + (i+1) + ')>.scoreStickNumber').html(scores[i]);
 		}
@@ -86,7 +98,7 @@
 		removeBig();
 
 		wordPopShow();
-	
+
 		//Splash Screen
 		socket.on('splashScreen', function(){
 			$('.screen').addClass('hidden');
@@ -95,11 +107,47 @@
 		});
 
 		// Score
-		socket.on('scoreScreen', function(scores){
-			populateScore(scores);
+		socket.on('scoreScreen2', function(scores){
+			populateScore(scores,"p2");
 			showScorePointRace();
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
+		});
+		socket.on('scoreScreen', function(scores){
+			populateScore(scores,"p1");
+			showScorePointRace();
+			$('.screen').addClass('hidden');
+			$('.scoreOverview').removeClass('hidden');
+		});
+
+
+		//FreezeTimer
+		socket.on('FreezeTimer', function(){
+				if(!statePause){
+					console.log(statePause);
+					statePause = true;
+					$(".timerFill2").velocity("pause");
+								$(".freezeLabel").velocity({opacity : ["1","0"]},{duration : 400,easing : "easeIn"});
+				} else{
+					console.log(statePause);
+					statePause=false;
+					$(".timerFill2").velocity("resume");
+
+					$(".freezeLabel").velocity({opacity : ["0","1"]},{duration : 400,easing : "easeIn"});
+				}
+		});
+
+		//Answer
+		socket.on('displayAnswer', function(question){
+			$(".AnswerText").html(question.answer_1);
+			if(question.aimageCheck =="on"){
+				$(".answerShowImage").css("display","block");
+					$(".answerShowImage").attr("src",question.imageAns);
+			} else{
+				$(".answerShowImage").css("display","none");
+
+			}
+			showAnswer(question.answer_1,"noimg");
 		});
 
 		// Question
@@ -107,6 +155,40 @@
 			$('.screen').addClass('hidden');
 			$('.questionView').removeClass('hidden');
 			$('.mbSoal').html(question.question);
+
+
+			if(question.qimageCheck =="on"){
+			$('.messageTemplate3').css("display","block");
+			$('.imagePrevBig').css("display","block");
+			$('.imagePrevBig').attr("src",question.imageQues);
+			$('.mbSoal').html(question.question);
+
+		} else{
+		$('.messageTemplate3').css("display","block");
+		$('.imagePrevBig').css("display","none");
+		$('.mbSoal').html(question.question);
+
+		}
+
+
+			if(question.answer_1 == "" && question.image == "../images/uploaded_images/none"){
+			$('.messageTemplate2').css("display","block");
+			$('.messageTemplate3').css("display","none");
+			$('.mbSoal').html(question.question);
+
+		} else if(question.image != "../images/uploaded_images/none") {
+
+			$('.messageTemplate2').css("display","none");
+			$('.messageTemplate3').css("display","block");
+			$('.imagePrevBig').attr("src",question.image);
+			$('.mbSoal').html(question.question);
+		} else{
+					$('.messageTemplate2').css("display","none");
+					$('.messageTemplate3').css("display","none");
+					$('.imagePrevBig').attr("src",question.image);
+					$('.mbSoal').html(question.question);
+
+		}
 			// $('.questionImage').html(question.image);
 			// end the old counter
 			// startCounter(true);
@@ -120,16 +202,12 @@
 
 		socket.on('teamCorrect', function(data){
 			$('.scoreSticks:nth-child(' + (data[0]+1) + ')>.scoreStickNumber').html(data[1]);
-			$('.screen').addClass('hidden');
-			$('.correctLayout').removeClass('hidden');
-			wordPopCorrect("correct");
+			showScoreNotif("Team "+data[0],30,"green");
 		});
 
 		socket.on('teamIncorrect', function(data){
 			$('.scoreSticks:nth-child(' + (data[0]+1) + ')>.scoreStickNumber').html(data[1]);
-			$('.screen').addClass('hidden');
-			$('.correctLayout').removeClass('hidden');
-			wordPopCorrect("incorrect team");
+			showScoreNotif("Team "+data[0],-10,"red");
 		});
 	});
 
@@ -183,7 +261,10 @@
 							<div class= "messageBoard sticks" >
 								<div class="scoreSticks">
 								<!-- Going to be populated -->
+
+
 								</div>
+																	<div class="TitleScore">Score board 1</div>
 							</div>
 						</div>
 					</div>
@@ -212,41 +293,19 @@
 						<!-- Question -->
 						<div class= "contentInside">
 							<div class= "messageBoard">
-							<p class = "mbSoal">I had been searching about far below the levels that we slaves were supposed to frequent—possibly fifty feet beneath the main floor of the building—among a network of corridors and apartments, when I came suddenly upon three Mahars curled up upon a bed of skins. At first I thought they were dead, but later their regular breathing convinced me of my error. Like a flash the thought came to me of the marvelous opportunity these sleeping reptiles offered as a means of eluding the watchfulness of our captors and the Sagoth guards.</p>
 
-								<ul class="multipleChoiceAnswer">
-									<li class="AFirst correct">
-										<div class="listPin">
-											<div class="listPinR"></div>
-											<div class="listPinT">A</div>
-										</div>
-										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
-									</li>
+							<div class="messageTemplate3" style = "justify-content:center;	">
+								<img src="../images/uploaded_images/0" class="imagePrevBig">
 
-									<li class="ASecond wrong">
-										<div class="listPin">
-											<div class="listPinR"></div>
-											<div class="listPinT">B</div>
-										</div>
-										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
-									</li>
 
-									<li class="Athird">
-										<div class="listPin">
-											<div class="listPinR"></div>
-											<div class="listPinT">C</div>
-										</div>
-										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
-									</li>
+								<p class = "mbSoal">
+									I had been searching about far below the levels that we slaves were supposed to frequent—possibly fifty feet beneath the main floor of the building—among a network of corridors and apartments, when I came suddenly upon three Mahars curled up upon a bed of skins. At first I thought they were dead, but later their regular breathing convinced me of my error. Like a flash the thought came to me of the marvelous opportunity these sleeping reptiles offered as a means of eluding the watchfulness of our captors and the Sagoth guards.</p>
 
-									<li class="AFourth">
-										<div class="listPin">
-											<div class="listPinR"></div>
-											<div class="listPinT">D</div>
-										</div>
-										<p>An embedded derivative is a component of a hybrid contract that excludes a non-derivative host--with the effect that some of the cash flows of the combined instrument vary in a way similar to a stand-alone derivative.</p>
-									</li>
-								</ul>
+							</div>
+
+
+
+
 							</div>
 						</div>
 					</div>
@@ -256,36 +315,86 @@
 				</div>
 				<!-- <div class="questionTimer"></div> -->
 				<div class="timerDone hidden">
-					
+
 				</div>
 			</div>
 
-			<!-- Correct -->
-			<div class="correctLayout hidden screen">
-				<div class="correctAnswer">
-					CORRECT!!
-				</div>
-				<div class="correctAnswerString">test
-				</div>
-				<div class="blackoutWrapper">
-					<div class="scorePieceWrapper enlargeBlackout">
-						<div class="scoreBar">
-							<div class="scoreSquare">
-								<div class="scoreSquareR">
-
-								</div>
-								<div class="scoreSquareT">
-									32
-								</div>
+						<!-- Correct -->
+						<div class="correctLayout hidden screen">
+							<div class="correctAnswer">
+								CORRECT!!
 							</div>
-							<div class="scoreBarContent">
-								<span class="scorePosition">#42</span><br>
-								<span class="scoreNumber">320+30</span>
+							<div class="correctAnswerString">test
+							</div>
+							<div class="blackoutWrapper">
+								<div class="scorePieceWrapper enlargeBlackout">
+									<div class="scoreBar">
+										<div class="scoreSquare">
+											<div class="scoreSquareR">
+
+											</div>
+											<div class="scoreSquareT">
+												32
+											</div>
+										</div>
+										<div class="scoreBarContent">
+											<span class="scorePosition">#42</span><br>
+											<span class="scoreNumber">320+40</span>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
+
+						<div class="newTimer">
+							<div class="BoxTimer">
+								<div class="TimerTitle">
+									TIMER
+								</div>
+								<div class="TimerContent">
+									<span class="timerCDMinute">05</span>:<span class="timerCDSeconds">30</span>
+								</div>
+									<div class="TimerSubtitle">
+										TIMER
+									</div>
+							</div>
+						</div>
+
+
+						<div class="correctAnswerFrame">
+							<div class="answerLabel">
+								<div class="answerTabs">
+									Team 10
+								</div>
+								<div class="answerCircle">
+									-10
+								</div>
+							</div>
+
+
+						</div>
+
+						<div class="freezeFrame">
+							<div class="freezeLabel">
+								FREEZE
+							</div>
+
+
+						</div>
+
+
+						<div class="FinalAnswerFrame">
+							<div class="AnswerFrame"><center>
+								<div class="AnswerTitle">ANSWER</div></center>
+									<center><img src="../images/uploaded_images/0" class="answerShowImage" width ="70%"></center>
+								<div class="AnswerText">
+									test
+								</div>
+							</div>
+
+
+						</div>
+
 		</div>
 
 		<!-- animations -->

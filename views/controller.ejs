@@ -1,12 +1,12 @@
 <html>
-	<head>
-		<title>Controller Score System</title>
+	<head><meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<title>Controller Score System</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	</head>
 
 	<!-- script -->
 	<script src="../js/jquery-3.1.1.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	
+
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
@@ -28,7 +28,7 @@
 		// setup System
 		socket.on('setupScore', function(data){
 			if(count > 0) return false;
-			
+
 			for(var i = 0; i<data.length; i++)
 			{
 				$('#team').append('<option value="' + (i+1) + '">' + (i+1) + '</option>');
@@ -66,11 +66,21 @@
 		{
 			socket.emit('scoreScreen');
 		});
+		$('#scoreOverview2').click(function()
+		{
+			socket.emit('scoreScreen2');
+		});
 
 		// Display Question
 		$('.questionShow').click(function()
 		{
 			socket.emit('displayQuestion', parseInt($(this).val()));
+		});
+
+		// Display Question
+		$('.answerShow').click(function()
+		{
+			socket.emit('displayAnswer', parseInt($(this).val()));
 		});
 
 		//On score changing
@@ -87,7 +97,12 @@
 			// socket.emit('scoreSet', data);
 			socket.emit('teamIncorrect', data);
 		});
-		
+
+		$('#btnFreeze').click(function()
+		{
+			socket.emit('FreezeTimer');
+		});
+
 
 	});
 	</script>
@@ -102,10 +117,13 @@
 		</div>
 		<hr width="100%">
 		<div class="row">
-			<div class="col-lg-3">
+			<div class="col-lg-12">
 				<h3>Score Overview</h3>
 				<button id="scoreOverview" class="btn btn-primary">
-					Score Overview
+					Score Page 1
+				</button>
+				<button id="scoreOverview2" class="btn btn-primary">
+					Score Page 2
 				</button>
 					<br><br>
 				<form id="addScore">
@@ -120,15 +138,19 @@
 					<button class="btn btn-primary" id="changeScoreIncorrect">Incorrect</button>
 				</form>
 			</div>
-			<div class="col-lg-3">
+			<div class="col-lg-12">
 				<h3>Question Control</h3>
-				<br>
+
+				<button id="btnFreeze" class="btn btn-primary">
+					Freeze/Play
+				</button><br><br>
 				<table class="table table-bordered">
 					<thead>
 						<tr>
 							<td>No</td>
 							<td>Question</td>
-                            <td>Action</td>
+              <td>Question Show</td>
+              <td>Show Answer</td>
 						</tr>
 					</thead>
 					<tbody id="bodyQuestion">
@@ -136,7 +158,8 @@
 							<tr>
 								<td><%= question.id+1 %></td>
 								<td><%= question.question %></td>
-                                <td><button id="<%= question.id %>" value="<%= question.id %>" class="questionShow btn btn-primary">Show</button></td>
+                <td><button id="<%= question.id %>" value="<%= question.id %>" class="questionShow btn btn-primary">Show</button></td>
+                <td><button id="<%= question.id %>" value="<%= question.id %>" class="answerShow btn btn-primary">Show</button></td>
 							</tr>
 						<% }); %>
 					</tbody>

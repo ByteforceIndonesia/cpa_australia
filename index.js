@@ -29,7 +29,7 @@ var scores = [];
 //Mutlter Upload
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname +'/temp/uploaded_images')
+    cb(null, __dirname +'/public/images/uploaded_images')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname)
@@ -59,7 +59,7 @@ app.get('/controller', function(req, res)
 
 //get input from controller
 io.on('connection', function(socket){
-	
+
 	// SplashScreen
 	socket.on('splashScreen', function()
 	{
@@ -71,12 +71,16 @@ io.on('connection', function(socket){
 	{
 		io.emit('scoreScreen', scores);
 	});
+	socket.on('scoreScreen2', function()
+	{
+		io.emit('scoreScreen2', scores);
+	});
 
 	// Question
 	socket.on('displayQuestion',function(id){
 		// itu idnya di bikin ascending
 		questions.find({"id": id}).then((docs) => {
-			
+      console.log(docs);
 			// Display Question for Client
 			io.emit('displayQuestion', docs[0]);
 
@@ -85,6 +89,16 @@ io.on('connection', function(socket){
 
 			// Greyout button on controller
 			io.emit('greyOut', questionCount);
+		});
+	});
+	// Question
+	socket.on('displayAnswer',function(id){
+		// itu idnya di bikin ascending
+		questions.find({"id": id}).then((docs) => {
+
+			// Display Answer for Client
+			io.emit('displayAnswer', docs[0]);
+
 		});
 	});
 
@@ -107,6 +121,16 @@ io.on('connection', function(socket){
 		var send = [data[0], data[1]];
 		io.emit('teamIncorrect', send);
 	});
+
+
+	// FreezeTimer
+	socket.on('FreezeTimer', function(){
+
+		io.emit('FreezeTimer');
+	});
+
+
+
 });
 
 
@@ -135,11 +159,13 @@ app.post('/process_post', upload.fields([{name:'question_image', maxCount: 1}, {
 
 		var response = {
 			id: flag,
-			question: req.body.question
+			question: req.body.question,
+			qimageCheck: req.body.question_image_check,
+			aimageCheck: req.body.answer_image_check
 		}
 
-		response.imageQues = '/temp/uploaded_images/ques_' + response.id;
-		response.imageAns = '/temp/uploaded_images/ans_' + response.id;
+		response.imageQues = '../images/uploaded_images/ques_' + response.id;
+		response.imageAns = '../images/uploaded_images/ans_' + response.id;
 
 		//Insert Answers
 		if (Array.isArray(answers))
@@ -152,13 +178,13 @@ app.post('/process_post', upload.fields([{name:'question_image', maxCount: 1}, {
 		}
 
 		//Move uploaded file
-		fs.rename(__dirname + '/temp/uploaded_images/answer_image', __dirname + '/temp/uploaded_images/ans_' + response.id, function(err){
-		    if (err) 
+		fs.rename(__dirname + '/public/images/uploaded_images/answer_image', __dirname + '/public/images/uploaded_images/ans_' + response.id, function(err){
+		    if (err)
 	    	console.log(err);
 		});
 
-		fs.rename(__dirname + '/temp/uploaded_images/question_image', __dirname + '/temp/uploaded_images/ques_' + response.id, function(err){
-		    if (err) 
+		fs.rename(__dirname + '/public/images/uploaded_images/question_image', __dirname + '/public/images/uploaded_images/ques_' + response.id, function(err){
+		    if (err)
 	    	console.log(err);
 		});
 
@@ -188,15 +214,15 @@ app.get('/setup_system',function(req, res){
 		{
 			questionCount[i] = 0;
 		}
-	
+
 		//Broadcast
-		io.on('connection', function(socket){	
+		io.on('connection', function(socket){
 			socket.emit('setupScore', scores);
 		});
-		
+
 		res.send('Setup Success!');
 
-	});	
+	});
 });
 
 // reset question counter

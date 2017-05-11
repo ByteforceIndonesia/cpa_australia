@@ -1,4 +1,14 @@
 
+//global vars
+var start = new Date;
+var waktu = 120;
+var timerObject, timerMin;
+
+var timerWaktuCountdown = 900;
+var timerCountdown;
+
+var statePause = false;
+
 $(".contentInside").velocity({scaleY : ["0"]}, {duration : 0});
 function initial(){
 
@@ -70,22 +80,38 @@ function wordPopShowRed(){
 
 
 }
-function showSoalLoadTimer(){removeAll()
-//timerIconEmbed
-// timer iseng
-var start = new Date;
-var waktu = 90;
-setTimeout(function() {
+function showSoalLoadTimer(){
 
-	setInterval(function() {
+removeAll();
+//timerIconEmbed
+//start = new Date;
+waktu = 20;
+// timer iseng
+
+clearInterval(timerMin);
+clearTimeout(timerObject);
+timerObject  = setTimeout(function() {
+
+	timerMin = setInterval(function() {
 	    $('.timerNumber').text(waktu );
+			if(!statePause){
 				$( ".timerNumber" ).velocity({scale :["1","1.4"]},{duration : 800, easing : "easeOut"});
 				$('.timerEmbedCount').velocity({ rotateZ : ["360deg", "0deg"]}, {duration : 800, easing : "easeInOut"});
-			waktu--;
+					waktu--;
+				}
+			if(waktu == 0){
+				$('.screen').addClass('hidden');
+				$('.correctLayout').removeClass('hidden');
+				wordPopCorrect("timesup");
+				console.log("timesup");
+			}
 	}, 1000);
-}, 1400);
+}, 4000);
 
 
+		$('.timerNumber').text(waktu );
+
+	$(".timerFill2").velocity( "stop");
 
 //reset
 	$(".blackout").velocity({opacity : ["0"]}, {duration : 0});
@@ -127,15 +153,14 @@ setTimeout(function() {
 	$(".AFourth").velocity({opacity : ["1"], scale : ["1","0"]},
 		{duration : 400, delay : timeyea+800, easing : "easeInOut"});
 
-
 	$(".timerFill2").velocity({scaleX : ["0","1"]},
-		{duration : 90000, delay : 1400, easing : "linear"});
+		{duration : 20000, delay : 1400, easing : "linear"});
 
 }
 function wordPopCorrect(Status){removeAll()
 	$(".blackout").velocity({opacity : ["1","0"]}, {duration : 800, easing : "easeIn"});
 	if(Status == "correct"){
-
+		$(".correctAnswerString").css("display","none");
 		$(".correctAnswer").html("CORRECT!!");
 		$(".blackoutWrapper").velocity({opacity : 1}, {duration : 0});
 	} else if(Status =="timesup"){
@@ -153,7 +178,10 @@ function wordPopCorrect(Status){removeAll()
 }
 function removeAll(){
 	$(".topFifteenLayout").velocity({opacity : ["0"]}, {duration : 0});
+	$(".newTimer").velocity({translateY : "100%"}, {duration : 0, easing : "easeIn"});
+
 	$(".blackout").velocity({opacity : ["0"]}, {duration : 0});
+	$(".FinalAnswerFrame").velocity({opacity : ["0"]}, {duration : 0});
 	$(".correctLayout").velocity({opacity : ["0"]}, {duration : 0});
 	$(".wordPop").velocity(
 		{scale : ["0","1"], translateY : ["-1000px","1300px"]},
@@ -185,7 +213,7 @@ $(".contentInside2").velocity({translateY : ["-"+$(".contentInside").outerHeight
 		$( ".scoreStick" ).each(function( index ) {
 				$( this ).velocity({scaleY : ["1","0"]}, {duration : 600, delay : index*50, easing : "easeInOut"})
 				.find(".scoreStickBar").css("background-color", colorarr[index]);
-				$( this ).find(".scoreStickT").html(index+1);
+
 				});
 
 
@@ -205,6 +233,48 @@ function showTop15(){
 					.html(index);
 	});
 }
+
+
+var hideScoreNotif;
+function showScoreNotif(teamnumber,teamscore,backgroundmode){
+	clearTimeout(hideScoreNotif);
+	$( ".answerLabel" ).velocity({opacity :"1"},{duration : 0});
+	$(".answerTabs").html(teamnumber);
+	$(".answerCircle").html(teamscore);
+	if(backgroundmode=="green"){
+		$(".answerLabel").css("background-color","#00B16A");
+		$(".answerCircle").css("background-color","#87D37C");
+	} else if(backgroundmode =="red"){
+		$(".answerLabel").css("background-color","#C0392B");
+		$(".answerCircle").css("background-color","#F1A9A0");
+
+	}
+	$( ".answerLabel" ).velocity({translateY :["0%","100%"], scale:["1","0"]},{duration : 400, easing : "easeIn"});
+
+
+	hideScoreNotif  = setTimeout(function() {
+		$( ".answerLabel" ).velocity({opacity :["0","1"]},{duration : 400, easing : "easeIn"});
+	},4000);
+
+
+	//$( ".answerLabel" ).velocity({opacity :["0","1"]},{duration : 400, delay:4000, easing : "easeIn"});
+}
+
+
+
+function showAnswer(answer,image){
+	clearTimeout(hideScoreNotif);
+
+		$( ".AnswerFrame" ).velocity({translateY :["0%","100%"], scale:["1","0"]},{duration : 800, easing : "easeIn"});
+		$( ".FinalAnswerFrame" ).velocity({opacity:["1","0"]},{duration : 800, easing : "easeIn"});
+
+
+
+
+	//$( ".answerLabel" ).velocity({opacity :["0","1"]},{duration : 400, delay:4000, easing : "easeIn"});
+}
+
+
 function showScoreStick(){
 
 }
@@ -213,10 +283,47 @@ initial();
 removeAll();
 removeBig();
 
+
+function timerCountdownStart(berapamenit, kataSubtitle){
+	timerWaktuCountdown = berapamenit;
+
+	$(".newTimer")
+
+	$(".TimerSubtitle").text(kataSubtitle);
+	clearInterval(timerCountdown);
+	timerCountdown = setInterval(function() {
+		var minute = "";
+			var seconds = "";
+		if(Math.ceil(timerWaktuCountdown/60)<10){
+			minute = "0"+Math.ceil(timerWaktuCountdown/60);
+		}else{
+			minute = Math.ceil(timerWaktuCountdown/60);
+		}
+		if(Math.ceil(timerWaktuCountdown%60)<10){
+			seconds = "0"+Math.ceil(timerWaktuCountdown%60);
+		}else{
+			seconds = Math.ceil(timerWaktuCountdown%60);
+		}
+			$('.timerCDMinute').html(minute);
+					$('.timerCDSeconds').html(seconds);
+			timerWaktuCountdown--;
+			if(timerWaktuCountdown < 1){timerWaktuCountdown =0;
+				console.log("countdown berakhir");
+				$(".TimerContent").html("Time's Up");
+			}
+
+
+
+	}, 10);
+		$(".newTimer").velocity({translateY : ["0%","100%"]}, {duration : 800, easing : "easeIn"});
+
+}
+
 $(window).keydown(function(event){
 	console.log(event.which);
 
 	if(event.which ==49){
+		timerCountdownStart(900, "");
 
 	} else if(event.which ==50){
 		wordPopShow();
@@ -236,6 +343,17 @@ $(window).keydown(function(event){
 		removeAll();
 	}else if(event.which==87){
 		removeBig();
+	}
+	else if(event.which==65){
+		showScoreNotif("Team 15","30","green");
+	}
+	else if(event.which==83){
+		showScoreNotif("Team 15","-10","red");
+	}
+	else if(event.which==90){
+		showAnswer("tra tra tra tralalalallalala","red.jpg");
+	}
+	else if(event.which==88){
 	}
 
 });

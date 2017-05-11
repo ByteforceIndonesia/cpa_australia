@@ -6,7 +6,7 @@
 	<!-- script -->
 	<script src="../js/jquery-3.1.1.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	
+
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
@@ -21,7 +21,7 @@
 		// setup System
 		socket.on('setupScore', function(data){
 			if(count > 0) return false;
-			
+
 			for(var i = 0; i<data.length; i++)
 			{
 				$('#team').append('<option value="' + (i+1) + '">' + (i+1) + '</option>');
@@ -48,6 +48,10 @@
 		{
 			socket.emit('scoreScreen');
 		});
+		$('#scoreOverview2').click(function()
+		{
+			socket.emit('scoreScreen2');
+		});
 
 		// Display Question
 		$('#displayQuestion').click(function()
@@ -69,9 +73,10 @@
 			// socket.emit('scoreSet', data);
 			socket.emit('teamIncorrect', data);
 		});
-		
+
 
 	});
+
 	</script>
 
 	<body>
@@ -87,6 +92,9 @@
 			<div class="col-lg-3">
 				<h3>Score Overview</h3>
 				<button id="scoreOverview" class="btn btn-primary">
+					Score Overview
+				</button>
+				<button id="scoreOverview2" class="btn btn-primary">
 					Score Overview
 				</button>
 					<br><br>
