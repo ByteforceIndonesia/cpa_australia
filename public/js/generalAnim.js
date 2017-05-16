@@ -165,7 +165,7 @@ function wordPopCorrect(Status){removeAll()
 		$(".blackoutWrapper").velocity({opacity : 1}, {duration : 0});
 	} else if(Status =="timesup"){
 
-		$(".correctAnswer").html("TIMES UP!!");
+		$(".correctAnswer").html("TIME'S UP!!");
 		$(".blackoutWrapper").velocity({opacity : 0}, {duration : 0});
 	}
 	$(".correctLayout ").velocity({scale : 0, opacity : 0}, {duration : 0});
@@ -295,14 +295,14 @@ function timerCountdownStart(berapamenit, kataSubtitle){
 		var minute = "";
 			var seconds = "";
 		if(Math.ceil(timerWaktuCountdown/60)<10){
-			minute = "0"+Math.ceil(timerWaktuCountdown/60);
+			minute = "0"+Math.floor(timerWaktuCountdown/60);
 		}else{
-			minute = Math.ceil(timerWaktuCountdown/60);
+			minute = Math.floor(timerWaktuCountdown/60);
 		}
-		if(Math.ceil(timerWaktuCountdown%60)<10){
-			seconds = "0"+Math.ceil(timerWaktuCountdown%60);
+		if(Math.floor(timerWaktuCountdown%60)<10){
+			seconds = "0"+Math.floor(timerWaktuCountdown%60);
 		}else{
-			seconds = Math.ceil(timerWaktuCountdown%60);
+			seconds = Math.floor(timerWaktuCountdown%60);
 		}
 			$('.timerCDMinute').html(minute);
 					$('.timerCDSeconds').html(seconds);
@@ -314,7 +314,7 @@ function timerCountdownStart(berapamenit, kataSubtitle){
 
 
 
-	}, 10);
+	}, 1000);
 		$(".newTimer").velocity({translateY : ["0%","100%"]}, {duration : 800, easing : "easeIn"});
 
 }

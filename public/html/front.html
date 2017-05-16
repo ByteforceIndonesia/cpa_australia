@@ -53,10 +53,76 @@
 		if(page=="p2"){
 			x= 14;
 				$(".TitleScore").html('Scoreboard 2/2');
-		} else{
+		}  else{
 			$(".TitleScore").html('Scoreboard 1/2');
 		}
+
 		var c = 0;
+
+		var scoreSet=[];
+		var scoreSetNum=[];
+
+		for(var i=0; i< scores.length; i++)
+		{
+			scoreSet.push(scores[i]);
+				scoreSetNum.push(i);
+		}
+
+		// sort 5
+
+		var i,h;
+		var dataSize = scores.length;
+		for (h = 0; h < dataSize-1; h++) {
+		    var min = h;
+		    for (i = h+1; i < dataSize; i++) {
+		        if (scoreSet[i] > scoreSet[min]) {
+		            min = i;
+		        }
+		    }
+		    if(min != h)
+		    {
+						var tmp = scoreSet[h]; scoreSet[h] = scoreSet[min]; scoreSet[min] = tmp;
+						var tmp2 = scoreSetNum[h]; scoreSetNum[h] = scoreSetNum[min]; scoreSetNum[min] = tmp2;
+		    }
+		}
+		for(var i=0; i< scoreSet.length; i++){
+			console.log("a ::: " + scoreSet[i]);
+		}
+
+		if(page=="s5"){
+				//Create the Classes
+				for(var i=0; i< 5; i++)
+				{
+
+					$('.scoreSticks').append(
+										'<div class="scoreStick">' +
+											'<div class= "scoreStickSquare">' +
+												'<div class="scoreStickR">' +
+												'</div>' +
+												'<div class="scoreStickT">' +
+													(scoreSetNum[i]+1) +
+												'</div>' +
+											'</div>' +
+											'<div class="scoreStickBar" style = "height:'+(scoreSet[i]/360)*600+'px;">' +
+											'</div>' +
+											'<div class="scoreStickNumber">' +
+												'0' +
+											'</div>' +
+										'</div>');
+										c++;
+										if(c>=14){
+											break;
+										}
+				}
+
+				// Fill the classes
+				for(var i = x; i<scores.length; i++)
+				{
+					$('.scoreStick:nth-child(' + (i+1) + ')>.scoreStickNumber').html(scoreSet[i]);
+				}
+
+
+		} else{
 
 		//Create the Classes
 		for(var i=x; i< scores.length; i++)
@@ -87,6 +153,8 @@
 		{
 			$('.scoreStick:nth-child(' + (i+1) + ')>.scoreStickNumber').html(scores[i]);
 		}
+
+	}
 	}
 
 
@@ -107,6 +175,12 @@
 		});
 
 		// Score
+		socket.on('scoreScreenTop5', function(scores){
+			populateScore(scores,"s5");
+			showScorePointRace();
+			$('.screen').addClass('hidden');
+			$('.scoreOverview').removeClass('hidden');
+		});
 		socket.on('scoreScreen2', function(scores){
 			populateScore(scores,"p2");
 			showScorePointRace();
@@ -121,6 +195,9 @@
 		});
 
 
+		socket.on('setTimer', function(time){
+			timerCountdownStart(time, "");
+		});
 		//FreezeTimer
 		socket.on('FreezeTimer', function(){
 				if(!statePause){

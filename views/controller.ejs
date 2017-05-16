@@ -36,13 +36,13 @@
 			count++;
 		});
 
-		//Populate question
-		socket.on('populateQuestions', function(questions){
-			for(var i = 0; i<questions.length; i++)
-			{
-				$('#bodyQuestion').append("<tr><td>" + questions[1] + "</td><td>" + questions[2] + "</td></tr>");
-			}
-		});
+				//Populate question
+				socket.on('populateQuestions', function(questions){
+					for(var i = 0; i<questions.length; i++)
+					{
+						$('#bodyQuestion').append("<tr><td>" + questions[1] + "</td><td>" + questions[2] + "</td></tr>");
+					}
+				});
 
         // Greyout already showed question
         socket.on('greyOut', function(questionsArray){
@@ -55,13 +55,58 @@
             }
         });
 
-		// Splash Screen
-		$('#splashScreen').click(function()
-		{
-			socket.emit('splashScreen');
-		});
+					// Splash Screen
+			$('#splashScreen').click(function()
+			{
+				socket.emit('splashScreen');
+			});
+
+					$('#Timer60').click(function()
+					{
+						socket.emit('setTimer', 3600);
+					});
+
+					$('#Timer45').click(function()
+					{
+						socket.emit('setTimer', 2700);
+					});
+
+					$('#Timer30').click(function()
+					{
+						socket.emit('setTimer', 1800);
+					});
+
+					$('#Timer25').click(function()
+					{
+						socket.emit('setTimer', 1500);
+					});
+
+					$('#Timer20').click(function()
+					{
+						socket.emit('setTimer', 1200);
+					});
+
+										// Splash Screen
+										$('#Timer15').click(function()
+										{
+											socket.emit('setTimer', 900);
+										});
+					$('#Timer10').click(function()
+					{
+						socket.emit('setTimer', 600);
+					});
+
+									// Splash Screen
+									$('#Timer5').click(function()
+									{
+										socket.emit('setTimer', 300);
+									});
 
 		// Score Screen
+		$('#scoreTop5').click(function()
+		{
+			socket.emit('scoreScreenTop5');
+		});
 		$('#scoreOverview').click(function()
 		{
 			socket.emit('scoreScreen');
@@ -113,6 +158,14 @@
 			<div class="col-lg-12">
 				<h1>Score System Controller</h1>
 				<button id="splashScreen" class="btn btn-primary">Splash Screen</button>
+				<button id="Timer60" class="btn btn-primary">Timer 60</button>
+				<button id="Timer45" class="btn btn-primary">Timer 45</button>
+				<button id="Timer30" class="btn btn-primary">Timer 30</button>
+				<button id="Timer25" class="btn btn-primary">Timer 25</button>
+				<button id="Timer20" class="btn btn-primary">Timer 20</button>
+				<button id="Timer15" class="btn btn-primary">Timer 15</button>
+				<button id="Timer10" class="btn btn-primary">Timer 10</button>
+				<button id="Timer5" class="btn btn-primary">Timer 5</button>
 			</div>
 		</div>
 		<hr width="100%">
@@ -124,6 +177,9 @@
 				</button>
 				<button id="scoreOverview2" class="btn btn-primary">
 					Score Page 2
+				</button>
+				<button id="scoreTop5" class="btn btn-primary">
+					Score Top 5
 				</button>
 					<br><br>
 				<form id="addScore">
