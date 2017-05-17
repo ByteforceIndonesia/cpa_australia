@@ -132,7 +132,7 @@
 		//On score changing
 		$('#changeScoreCorrect').click(function()
 		{
-			var data = [$('#team').val(), 30]
+			var data = [$('#team').val(), 20]
 			// socket.emit('scoreSet', data);
 			socket.emit('teamCorrect', data);
 		});
