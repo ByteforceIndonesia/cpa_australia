@@ -178,6 +178,8 @@
 
 		//Splash Screen
 		socket.on('splashScreen', function(){
+			statePause = true;
+			$(".timerFill2").velocity("pause");
 			$('.screen').addClass('hidden');
 			$('.splashScreen').removeClass('hidden');
 			wordPopShow();
@@ -185,18 +187,24 @@
 
 		// Score
 		socket.on('scoreScreenTop5', function(scores){
+			statePause = true;
+			$(".timerFill2").velocity("pause");
 			populateScore(scores,"s5");
 			showScorePointRace();
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
 		});
 		socket.on('scoreScreen2', function(scores){
+			statePause = true;
+			$(".timerFill2").velocity("pause");
 			populateScore(scores,"p2");
 			showScorePointRace();
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
 		});
 		socket.on('scoreScreen', function(scores){
+			statePause = true;
+			$(".timerFill2").velocity("pause");
 			populateScore(scores,"p1");
 			showScorePointRace();
 			$('.screen').addClass('hidden');
@@ -221,18 +229,11 @@
 				}
 		});
 
-		socket.on('freezeTimerEnd', function(){
-					statePause = true;
-					console.log('end yeah');
-					$(".timerFill2").velocity("pause");
-					$(".freezeLabel").velocity({opacity : ["1","0"]},{duration : 400,easing : "easeIn"});
-		});
-
 		//Answer
 		socket.on('displayAnswer', function(question){
 			statePause = true;
 			$(".timerFill2").velocity("pause");
-			
+
 			$(".AnswerText").html(question.answer_1);
 			if(question.aimageCheck =="on"){
 				$(".answerShowImage").css("display","block");
@@ -246,6 +247,8 @@
 
 		// Question
 		socket.on('displayQuestion', function(question){
+			statePause = false;
+			
 			$('.screen').addClass('hidden');
 			$('.questionView').removeClass('hidden');
 			$('.mbSoal').html(question.question);

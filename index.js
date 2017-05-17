@@ -151,15 +151,13 @@ io.on('connection', function(socket){
 	socket.on('FreezeTimer', function(){
 		io.emit('FreezeTimer');
 	});
-
-	
-	
-	// FreezeTimer
-	socket.on('freezeTimerEnd', function(){
-		io.emit('freezeTimerEnd');
-	});
 });
 
+
+app.get('/export_db', function(req, res){
+	
+	res.send("Exported");
+});
 
 //Add Question
 app.get('/add_question', function(req, res){
