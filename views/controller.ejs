@@ -61,46 +61,47 @@
 				socket.emit('splashScreen');
 			});
 
-					$('#Timer60').click(function()
-					{
-						socket.emit('setTimer', 3600);
-					});
+			$('#Timer60').click(function()
+			{
+				socket.emit('setTimer', 3600);
+			});
 
-					$('#Timer45').click(function()
-					{
-						socket.emit('setTimer', 2700);
-					});
+			$('#Timer45').click(function()
+			{
+				socket.emit('setTimer', 2700);
+			});
 
-					$('#Timer30').click(function()
-					{
-						socket.emit('setTimer', 1800);
-					});
+			$('#Timer30').click(function()
+			{
+				socket.emit('setTimer', 1800);
+			});
 
-					$('#Timer25').click(function()
-					{
-						socket.emit('setTimer', 1500);
-					});
+			$('#Timer25').click(function()
+			{
+				socket.emit('setTimer', 1500);
+			});
 
-					$('#Timer20').click(function()
-					{
-						socket.emit('setTimer', 1200);
-					});
+			$('#Timer20').click(function()
+			{
+				socket.emit('setTimer', 1200);
+			});
 
-										// Splash Screen
-										$('#Timer15').click(function()
-										{
-											socket.emit('setTimer', 900);
-										});
-					$('#Timer10').click(function()
-					{
-						socket.emit('setTimer', 600);
-					});
+			// Splash Screen
+			$('#Timer15').click(function()
+			{
+				socket.emit('setTimer', 900);
+			});
+			
+			$('#Timer10').click(function()
+			{
+				socket.emit('setTimer', 600);
+			});
 
-									// Splash Screen
-									$('#Timer5').click(function()
-									{
-										socket.emit('setTimer', 300);
-									});
+			// Splash Screen
+			$('#Timer5').click(function()
+			{
+				socket.emit('setTimer', 300);
+			});
 
 		// Score Screen
 		$('#scoreTop5').click(function()
@@ -148,7 +149,14 @@
 			socket.emit('FreezeTimer');
 		});
 
+		$('#save').click(function()
+		{
+			socket.emit('saveState');
+		});
 
+		$('#load').click(function(){
+			window.location.replace('http://localhost:3000/load')
+		});
 	});
 	</script>
 
@@ -193,6 +201,17 @@
 					<!-- incorrect -->
 					<button class="btn btn-primary" id="changeScoreIncorrect">Incorrect</button>
 				</form>
+			</div>
+			<div class="col-lg-12">
+				<h3>Save or Load State</h3>
+				<div class="col-lg-6">
+					<button class="btn btn-primary" id="save">Save State</button>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<button class="btn btn-primary" id="load">Load State</button>
+					</div>
+				</div>
 			</div>
 			<div class="col-lg-12">
 				<h3>Question Control</h3>

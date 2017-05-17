@@ -52,7 +52,6 @@ app.get('/', function(req, res){
 app.get('/controller', function(req, res)
 {
 	questions.find({}, {sort: {id : 1}}).then((docs) => {
-		// res.sendFile(__dirname + '/public/html/back.html');
 		res.render('controller', {questions: docs});
 	});
 });
@@ -66,6 +65,12 @@ io.on('connection', function(socket){
 		io.emit('splashScreen');
 	});
 
+	//Countdown
+	socket.on('setTimer', function(data)
+	{
+		io.emit('setTimer', data);
+	});
+
 	// Score
 	socket.on('scoreScreen', function()
 	{
@@ -74,6 +79,11 @@ io.on('connection', function(socket){
 	socket.on('scoreScreen2', function()
 	{
 		io.emit('scoreScreen2', scores);
+	});
+
+	socket.on('scoreScreenTop5', function()
+	{
+		io.emit('scoreScreenTop5', scores);
 	});
 
 	// Question
@@ -122,15 +132,25 @@ io.on('connection', function(socket){
 		io.emit('teamIncorrect', send);
 	});
 
+	// Save state
+	socket.on('saveState', function()
+	{
+		var save = {
+			score_data: scores
+		};
+
+		var json = JSON.stringify(save);
+
+		fs.writeFile('saved_state.json', json, 'utf8', function(err){
+				console.log("Error saving file");
+				console.log(err);
+			});
+	});
 
 	// FreezeTimer
 	socket.on('FreezeTimer', function(){
-
 		io.emit('FreezeTimer');
 	});
-
-
-
 });
 
 
@@ -219,10 +239,31 @@ app.get('/setup_system',function(req, res){
 		io.on('connection', function(socket){
 			socket.emit('setupScore', scores);
 		});
-
-		res.send('Setup Success!');
-
+		
+		res.send('Setup Success! You will be redirected shortly');
+		res.redirect('http://localhost:3000/controller');
 	});
+});
+
+// Load state
+app.get('/load', function(req, res)
+{
+	fs.readFile('saved_state.json', 'utf8', function readFileCallback(err, data){
+	    if (err){
+	        console.log(err);
+	    } else {
+	    obj = JSON.parse(data); //now it an object
+	    
+	    var score_data = obj.score_data;
+
+	    for(var i = 0; i < score_data.length; i++ )
+	    {
+	    	scores[i] = score_data[i];
+	    }
+
+	}});
+
+	res.send('Loaded')
 });
 
 // reset question counter

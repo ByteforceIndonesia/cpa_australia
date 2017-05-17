@@ -85,6 +85,7 @@
 						var tmp2 = scoreSetNum[h]; scoreSetNum[h] = scoreSetNum[min]; scoreSetNum[min] = tmp2;
 		    }
 		}
+
 		for(var i=0; i< scoreSet.length; i++){
 			console.log("a ::: " + scoreSet[i]);
 		}
@@ -100,7 +101,7 @@
 												'<div class="scoreStickR">' +
 												'</div>' +
 												'<div class="scoreStickT">' +
-													(scoreSetNum[i]+1) +
+													(scoreSetNum[i]+1).toString() +
 												'</div>' +
 											'</div>' +
 											'<div class="scoreStickBar" style = "height:'+(scoreSet[i]/360)*600+'px;">' +
@@ -127,6 +128,14 @@
 		//Create the Classes
 		for(var i=x; i< scores.length; i++)
 		{
+			if(scores[i] < 0)
+			{
+				var score = 0;
+			}else
+			{
+				var score = (scores[i]/360)*600;
+			}
+
 			$('.scoreSticks').append(
 								'<div class="scoreStick">' +
 									'<div class= "scoreStickSquare">' +
@@ -136,7 +145,7 @@
 											(i+1).toString() +
 										'</div>' +
 									'</div>' +
-									'<div class="scoreStickBar" style = "height:'+(scores[i]/360)*600+'px;">' +
+									'<div class="scoreStickBar" style = "height:'+score+'px;">' +
 									'</div>' +
 									'<div class="scoreStickNumber">' +
 										'0' +
@@ -193,8 +202,6 @@
 			$('.screen').addClass('hidden');
 			$('.scoreOverview').removeClass('hidden');
 		});
-
-
 		socket.on('setTimer', function(time){
 			timerCountdownStart(time, "");
 		});
