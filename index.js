@@ -151,6 +151,13 @@ io.on('connection', function(socket){
 	socket.on('FreezeTimer', function(){
 		io.emit('FreezeTimer');
 	});
+
+	
+	
+	// FreezeTimer
+	socket.on('freezeTimerEnd', function(){
+		io.emit('freezeTimerEnd');
+	});
 });
 
 

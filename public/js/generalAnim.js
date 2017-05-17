@@ -85,7 +85,7 @@ function showSoalLoadTimer(){
 removeAll();
 //timerIconEmbed
 //start = new Date;
-waktu = 20;
+waktu = 60;
 // timer iseng
 
 clearInterval(timerMin);
@@ -154,7 +154,7 @@ timerObject  = setTimeout(function() {
 		{duration : 400, delay : timeyea+800, easing : "easeInOut"});
 
 	$(".timerFill2").velocity({scaleX : ["0","1"]},
-		{duration : 20000, delay : 1400, easing : "linear"});
+		{duration : 60000, delay : 1400, easing : "linear"});
 
 }
 function wordPopCorrect(Status){removeAll()

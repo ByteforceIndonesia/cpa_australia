@@ -221,8 +221,18 @@
 				}
 		});
 
+		socket.on('freezeTimerEnd', function(){
+					statePause = true;
+					console.log('end yeah');
+					$(".timerFill2").velocity("pause");
+					$(".freezeLabel").velocity({opacity : ["1","0"]},{duration : 400,easing : "easeIn"});
+		});
+
 		//Answer
 		socket.on('displayAnswer', function(question){
+			statePause = true;
+			$(".timerFill2").velocity("pause");
+			
 			$(".AnswerText").html(question.answer_1);
 			if(question.aimageCheck =="on"){
 				$(".answerShowImage").css("display","block");
@@ -407,8 +417,6 @@
 						<div class="correctLayout hidden screen">
 							<div class="correctAnswer">
 								CORRECT!!
-							</div>
-							<div class="correctAnswerString">test
 							</div>
 							<div class="blackoutWrapper">
 								<div class="scorePieceWrapper enlargeBlackout">
